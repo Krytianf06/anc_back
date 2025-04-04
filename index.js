@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/test", async (req, res) => {
+app.post("/logowanie", async (req, res) => {
 	const login = req.body.username;
 	console.log(login);
 	const password = req.body.password;
@@ -31,6 +31,11 @@ app.get("/test", async (req, res) => {
 
 	// const login2 = req.body;
 	// console.log(login2);
+});
+
+app.post("/szukanie", async (req, res) => {
+	const { filter, pagination } = req.body;
+	console.log(filter.kolekcjanumerokazu, pagination.currentPage);
 });
 
 app.post("/test2", (req, res) => {
