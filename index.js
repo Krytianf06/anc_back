@@ -66,7 +66,6 @@ logowanie1 = async (login, password) => {
 		.then(function (response) {
 			tokenID = response.data;
 		})
-		.then()
 		.catch(function (error) {
 			console.log(error);
 		});
