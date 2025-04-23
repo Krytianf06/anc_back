@@ -13,6 +13,11 @@ app.use(express.urlencoded({ extended: true }));
 
 let idToken = [];
 
+let tabIdOkaz = [];
+
+
+
+
 app.post("/logowanie", async (req, res) => {
 	const login = req.body.username;
 	console.log(login);
@@ -42,13 +47,11 @@ app.post("/refresh", async (req, res) => {
 	try {
 		let noweID = "";
 		await RefreshToken(idToken[0].refresh).then(function(idRefreshID2){
-			console.log("wysylanie0")
-			noweID = idRefreshID2
-			console.log("wysylanie12")
+			noweID = idRefreshID2;
+			console.log("wysylanie12");
 			// console.log(idToken[0].refresh)
 			// console.log(noweID)
 		});
-		idToken.splice(0,1,noweID)
 		// console.log(noweID)
 		login1();
 		res.send(noweID);
@@ -62,10 +65,36 @@ app.post("/refresh", async (req, res) => {
 
 
 
+
+
 app.post("/szukanie", async (req, res) => {
-	const { filter, pagination } = req.body;
-	console.log(filter.kolekcjanumerokazu, pagination.currentPage);
+	// const { filter, pagination } = req.body;
+	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
+
+	try {
+		let daneWysz = "";
+		await Search().then(function(dane){
+			daneWysz = dane
+		})
+		// console.log(daneWysz);
+		res.send(daneWysz);
+		tabIdOkaz.splice(0,1,daneWysz.items)
+		TabOkaz();
+
+	} catch (error) {
+		console.log(error);
+	}
 });
+
+
+const TabOkaz = () => {
+	console.log(tabIdOkaz);
+};
+
+
+
+
+
 
 app.post("/test2", (req, res) => {
 	// console.log(req.body);
@@ -127,6 +156,7 @@ RefreshToken = async (refreshID) => {
 			newRefreshID = response.data;
 			console.log("dane z refresh!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 			// console.log(newRefreshID);
+			idToken.splice(0,1,newRefreshID)
 
 		})
 		.catch(function (error) {
@@ -135,3 +165,35 @@ RefreshToken = async (refreshID) => {
 	// console.log(tokenID);
 	return newRefreshID;
 };
+
+
+Search = async (filter, paginacja) => {
+	let daneWyszykania = "";
+	await axios
+		.post(
+			"https://api.amunatcoll.pl/anc/taxons/search/",
+			{
+				filter: {kolekcjanumerokazu: 'POZ-V'},
+				pagination: {currentPage: 1, totalCount: 144195, perPage: 20, totalPages: 7210}
+			},
+			{
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+					"access-control-allow-credentials": "true",
+					Authorization: `Bearer ${idToken[0].access}`
+				},
+			}
+		)
+		.then(function (response) {
+			daneWyszykania = response.data;
+			console.log("dane z wyszukiwania!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+	// console.log(tokenID);
+	return daneWyszykania;
+};
+
