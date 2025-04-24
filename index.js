@@ -15,7 +15,7 @@ let idToken = [];
 
 let tabIdOkaz = [];
 
-
+let tabId = [];
 
 
 app.post("/logowanie", async (req, res) => {
@@ -79,6 +79,8 @@ app.post("/szukanie", async (req, res) => {
 		// console.log(daneWysz);
 		res.send(daneWysz);
 		tabIdOkaz.splice(0,1,daneWysz.items)
+		// console.log("zrobione")
+		// console.log(tabIdOkaz[0])
 		TabOkaz();
 
 	} catch (error) {
@@ -88,7 +90,8 @@ app.post("/szukanie", async (req, res) => {
 
 
 const TabOkaz = () => {
-	console.log(tabIdOkaz);
+	tabId = tabIdOkaz[0].map(idKolekcja => idKolekcja.kolekcjanumerokazu);
+	console.log(tabId);
 };
 
 
@@ -174,7 +177,7 @@ Search = async (filter, paginacja) => {
 			"https://api.amunatcoll.pl/anc/taxons/search/",
 			{
 				filter: {kolekcjanumerokazu: 'POZ-V'},
-				pagination: {currentPage: 1, totalCount: 144195, perPage: 20, totalPages: 7210}
+				pagination: {currentPage: 1, totalCount: 144195, perPage: 200, totalPages: 7210}
 			},
 			{
 				headers: {
@@ -196,4 +199,32 @@ Search = async (filter, paginacja) => {
 	// console.log(tokenID);
 	return daneWyszykania;
 };
+
+
+
+
+
+import axios from "axios";
+
+const options = {
+  method: 'GET',
+  url: 'https://api.amunatcoll.pl/anc/taxons/details/POZ-V-0000220/',
+  headers: {
+    cookie: 'visitor_id=FD822DE565C4B90943AF6113E',
+    'User-Agent': 'insomnia/11.0.2',
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDg2NDI1LCJpYXQiOjE3NDU0ODYxMjUsImp0aSI6IjgzOWRjNDY4NWZhZDRiMzk4ZWRjMmQwYTgyNDg2Nzg4IiwidXNlcl9pZCI6NDg3LCJhY2Nlc3NfdGFncyI6WyJ1c2VyXzQ4NyIsInRlYW1fMjI4IiwiY29vcmRpbmF0b3IiXX0.Lu0DZBYpdpMd0fAAO0evakPFhnErqeSdumPcLNhkVAI'
+  }
+};
+
+axios.request(options).then(function (response) {
+  console.log(response.data);
+}).catch(function (error) {
+  console.error(error);
+});
+
+
+
+
+
+
 
