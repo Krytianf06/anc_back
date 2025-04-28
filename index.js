@@ -65,8 +65,6 @@ app.post("/refresh", async (req, res) => {
 
 
 
-
-
 app.post("/szukanie", async (req, res) => {
 	// const { filter, pagination } = req.body;
 	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
@@ -87,6 +85,41 @@ app.post("/szukanie", async (req, res) => {
 		console.log(error);
 	}
 });
+
+
+
+app.post("/ident_gatunek", async (req, res) => {
+	// const { filter, pagination } = req.body;
+	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
+
+	for (let i = 0; i < tabId.length; i++) {
+		const elementID = tabId[i];
+		console.log(elementID); // Wypisze: element1, element2, element3
+		
+		try {
+			let daneGatunek = "";
+			await SearchIdRekord(elementID).then(function(dane){
+				daneGatunek = dane
+			})
+			console.log(daneGatunek);
+			res.send(daneGatunek);
+			// tabIdOkaz.splice(0,1,daneGatunek.items)
+			// console.log("zrobione")
+			// console.log(tabIdOkaz[0])
+			// TabOkaz();
+	
+		} catch (error) {
+			console.log(error);
+		}
+
+	  }
+		
+	  
+});
+
+
+
+
 
 
 const TabOkaz = () => {
@@ -177,7 +210,7 @@ Search = async (filter, paginacja) => {
 			"https://api.amunatcoll.pl/anc/taxons/search/",
 			{
 				filter: {kolekcjanumerokazu: 'POZ-V'},
-				pagination: {currentPage: 1, totalCount: 144195, perPage: 200, totalPages: 7210}
+				pagination: {currentPage: 1, totalCount: 144195, perPage: 10, totalPages: 7210}
 			},
 			{
 				headers: {
@@ -202,27 +235,31 @@ Search = async (filter, paginacja) => {
 
 
 
+SearchIdRekord = async (filter) => {
+	let daneGatunek = "";
+	await axios
+		.get(
+			`https://api.amunatcoll.pl/anc/taxons/details/${filter}/`,
+			{
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+					"access-control-allow-credentials": "true",
+					Authorization: `Bearer ${idToken[0].access}`
+				},
+			}
+		)
+		.then(function (response) {
+			daneGatunek = response.data;
+			console.log("dany rekord aktywny")
 
-
-import axios from "axios";
-
-const options = {
-  method: 'GET',
-  url: 'https://api.amunatcoll.pl/anc/taxons/details/POZ-V-0000220/',
-  headers: {
-    cookie: 'visitor_id=FD822DE565C4B90943AF6113E',
-    'User-Agent': 'insomnia/11.0.2',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDg2NDI1LCJpYXQiOjE3NDU0ODYxMjUsImp0aSI6IjgzOWRjNDY4NWZhZDRiMzk4ZWRjMmQwYTgyNDg2Nzg4IiwidXNlcl9pZCI6NDg3LCJhY2Nlc3NfdGFncyI6WyJ1c2VyXzQ4NyIsInRlYW1fMjI4IiwiY29vcmRpbmF0b3IiXX0.Lu0DZBYpdpMd0fAAO0evakPFhnErqeSdumPcLNhkVAI'
-  }
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+	// console.log(tokenID);
+	return daneGatunek;
 };
-
-axios.request(options).then(function (response) {
-  console.log(response.data);
-}).catch(function (error) {
-  console.error(error);
-});
-
-
 
 
 
