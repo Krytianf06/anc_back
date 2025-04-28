@@ -17,6 +17,10 @@ let tabIdOkaz = [];
 
 let tabId = [];
 
+let rekordDaneDlugosc = [];
+
+// let pauzaID = [];
+
 
 app.post("/logowanie", async (req, res) => {
 	const login = req.body.username;
@@ -92,32 +96,45 @@ app.post("/ident_gatunek", async (req, res) => {
 	// const { filter, pagination } = req.body;
 	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
 
-	for (let i = 0; i < tabId.length; i++) {
-		const elementID = tabId[i];
-		console.log(elementID); // Wypisze: element1, element2, element3
-		
-		try {
-			let daneGatunek = "";
-			await SearchIdRekord(elementID).then(function(dane){
-				daneGatunek = dane
-			})
-			console.log(daneGatunek);
-			res.send(daneGatunek);
-			// tabIdOkaz.splice(0,1,daneGatunek.items)
-			// console.log("zrobione")
-			// console.log(tabIdOkaz[0])
-			// TabOkaz();
 	
-		} catch (error) {
-			console.log(error);
-		}
 
-	  }
-		
-	  
+			for  ( let i = 0; i < tabId.length; i++) {
+			const elementID = tabId[i];
+			console.log(i);
+			
+				let daneGatunek = "";
+				await SearchIdRekord(elementID).then(function(dane){
+					daneGatunek = dane
+				})
+				// console.log(daneGatunek);
+				if (daneGatunek.lokalizacjastanowisko == 'bd' || daneGatunek.lokalizacjastanowisko == null ){
+					console.log(`puste + ${i}`);
+				
+				} else if (daneGatunek.kontynent != null && daneGatunek.dlugoscgeograficzna == null) {
+					rekordDaneDlugosc.push(`${daneGatunek.dlugoscgeograficzna} + ${daneGatunek.kolekcjanumerokazu}`)
+					console.log(daneGatunek.kolekcjanumerokazu);
+				}
+				// tabIdOkaz.splice(0,1,daneGatunek.items)
+				// console.log("zrobione")
+				// console.log(tabIdOkaz[0])
+				// TabOkaz();
+				if ( i == tabId.length-1) {
+					console.log("koniec");
+					IdBrakki();
+				}
+			} 
+		try {
+
+			res.send(rekordDaneDlugosc)
+	  }	catch (error) {
+		console.log(error);
+		}
+	  	
 });
 
-
+const IdBrakki = () => {
+	console.log(rekordDaneDlugosc);
+}
 
 
 
@@ -164,6 +181,7 @@ logowanie1 = async (login, password) => {
 		)
 		.then(function (response) {
 			tokenID = response.data;
+			console.log(response.status);
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -193,6 +211,7 @@ RefreshToken = async (refreshID) => {
 			console.log("dane z refresh!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 			// console.log(newRefreshID);
 			idToken.splice(0,1,newRefreshID)
+			res.cod()
 
 		})
 		.catch(function (error) {
@@ -210,7 +229,7 @@ Search = async (filter, paginacja) => {
 			"https://api.amunatcoll.pl/anc/taxons/search/",
 			{
 				filter: {kolekcjanumerokazu: 'POZ-V'},
-				pagination: {currentPage: 1, totalCount: 144195, perPage: 10, totalPages: 7210}
+				pagination: {currentPage: 2, perPage: 2500}
 			},
 			{
 				headers: {
@@ -227,6 +246,7 @@ Search = async (filter, paginacja) => {
 
 		})
 		.catch(function (error) {
+			if (res.cod)
 			console.log(error);
 		});
 	// console.log(tokenID);
@@ -251,7 +271,7 @@ SearchIdRekord = async (filter) => {
 		)
 		.then(function (response) {
 			daneGatunek = response.data;
-			console.log("dany rekord aktywny")
+			// console.log("dany rekord aktywny")
 
 		})
 		.catch(function (error) {
