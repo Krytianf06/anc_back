@@ -6,6 +6,9 @@ const morgan = require("morgan");
 const xlsx = require("xlsx");
 const jasonObject = require("./test.json");
 
+const { FunkcjaLogi, idToken } = require("./controllers/auth/login");
+const { Refresh } = require("./controllers/auth/refresh");
+
 const { json } = require("stream/consumers");
 
 const app = express();
@@ -18,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const dataPath = "./daneTokenID.json";
 
-let idToken = [];
+idToken;
 
 let tabIdOkaz = [];
 
@@ -29,29 +32,11 @@ let daneRekordu = [];
 
 // let pauzaID = [];
 
-app.post("/logowanie", async (req, res) => {
-	const login = req.body.username;
-	console.log(login);
-	const password = req.body.password;
-	console.log(password);
+app.post("/logowanie", FunkcjaLogi);
 
-	try {
-		let daneID = "";
-		await logowanie1(login, password).then(function (response) {
-			daneID = response.token;
-		});
-		res.send(daneID);
-		// idToken.push(daneID);
-		idToken.splice(0, 1, daneID);
-		// idToken = daneID;
-		login1();
-	} catch (err) {
-		console.log(err);
-	}
-});
-
-const login1 = () => {
+exports.login1 = (idToken) => {
 	console.log(idToken);
+	console.log("klops!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	storeData(idToken, dataPath);
 };
 
@@ -66,27 +51,10 @@ const storeData = (data, path) => {
 	}
 };
 
-app.post("/refresh", async (req, res) => {
-	// if (idToken == )
-	console.log(idToken);
-	try {
-		let noweID = "";
-		await RefreshToken(idToken[0].refresh).then(function (idRefreshID2) {
-			noweID = idRefreshID2;
-			console.log("wysylanie12");
-			// console.log(idToken[0].refresh)
-			// console.log(noweID)
-		});
-		// console.log(noweID)
-		login1();
-		res.send(noweID);
-	} catch (error) {
-		console.log(error);
-	}
-});
+app.post("/refresh", Refresh);
 
 app.post("/szukanie", async (req, res) => {
-	// const { filter, pagination } = req.body;
+	const { filter, pagination } = req.body;
 	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
 
 	try {
@@ -117,6 +85,19 @@ app.post("/ident_gatunek", async (req, res) => {
 		await SearchIdRekord(elementID).then(function (dane) {
 			daneGatunek = dane;
 		});
+
+		let objektDane = {
+			ID: daneGatunek.kolekcjanumerokazu,
+			instytucja: daneGatunek.instytucja,
+			państwo: daneGatunek.panstwo,
+			kolekcja: daneGatunek.kolekcja,
+		};
+
+		o.push(objektDane);
+		console.log(o);
+		// console.log(objektDane);
+		res.status(200).end();
+
 		// console.log(daneGatunek);
 
 		// Parametry wyszukiwania - sprawdzenie danych
@@ -150,38 +131,56 @@ app.post("/ident_gatunek", async (req, res) => {
 			console.log(daneRekordu);
 			// res.send(daneRekordu);
 			// IdBrakki();
-			JasonToExcel();
+			JasonToExcel(o);
 		}
 	}
 	try {
-		res.send(rekordDaneDlugosc);
+		// res.send(rekordDaneDlugosc);
+		res.status(200);
 	} catch (error) {
 		console.log(error);
 	}
 });
 
-JasonToExcel = () => {
+JasonToExcel = (x) => {
 	const workBook = xlsx.utils.book_new();
-	const workSheet = xlsx.utils.json_to_sheet(jasonObject);
+	const workSheet = xlsx.utils.json_to_sheet(x);
 	xlsx.utils.book_append_sheet(workBook, workSheet);
-	xlsx.writeFile(workBook, "daneToExcel.xlsx");
+	xlsx.writeFile(workBook, "daneToExcel2.xlsx");
 };
 
-const IdBrakki = () => {
-	console.log(rekordDaneDlugosc);
-};
+// const IdBrakki = () => {
+// 	console.log(rekordDaneDlugosc);
+// };
 
 const TabOkaz = () => {
 	tabId = tabIdOkaz[0].map((idKolekcja) => idKolekcja.kolekcjanumerokazu);
 	console.log(tabId);
 };
 
-app.post("/test2", (req, res) => {
+const o = new Object([]);
+
+app.post("/test", (req, res) => {
 	// console.log(req.body);
-	// res.send(req.boby.password);
-	// res.json(req.boby);
-	const cos = req.body.password;
-	console.log(cos);
+	const { ID, kolekcjanumerokazu, państwo } = req.body;
+	// 	function Person(first, last, age, eye) {
+	//   this.firstName = first;
+	//   this.lastName = last;
+	//   this.age = age;
+	//   this.eyeColor = eye;
+	// }
+	let objektDane1 = {
+		ID: ID,
+		kolekcjanumerokazu: kolekcjanumerokazu,
+		państwo: państwo,
+	};
+
+	o.push(objektDane1);
+	console.log(o);
+	if (o.length == 20) {
+		JasonToExcel(o);
+	}
+	// console.log(objektDane);
 	res.status(200).end();
 });
 
@@ -189,34 +188,6 @@ app.listen(8888, () => {
 	LoadeData();
 	console.log("aplikacja działa!!!!");
 });
-
-logowanie1 = async (login, password) => {
-	let tokenID = "";
-	await axios
-		.post(
-			"https://api.amunatcoll.pl/login/",
-			{
-				username: login,
-				password: password,
-			},
-			{
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json",
-					"access-control-allow-credentials": "true",
-				},
-			}
-		)
-		.then(function (response) {
-			tokenID = response.data;
-			console.log(response.status);
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
-	// console.log(tokenID);
-	return tokenID;
-};
 
 RefreshToken = async (refreshID) => {
 	let newRefreshID = "";
@@ -257,7 +228,7 @@ Search = async (filter, paginacja) => {
 			"https://api.amunatcoll.pl/anc/taxons/search/",
 			{
 				filter: { kolekcjanumerokazu: "POZ-V" },
-				pagination: { currentPage: 1, perPage: 100 },
+				pagination: { currentPage: 1, perPage: 200 },
 			},
 			{
 				headers: {
@@ -275,7 +246,7 @@ Search = async (filter, paginacja) => {
 			);
 		})
 		.catch(function (error) {
-			if (res.cod) console.log(error);
+			console.log(error);
 		});
 	// console.log(tokenID);
 	return daneWyszykania;
