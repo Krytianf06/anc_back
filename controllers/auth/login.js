@@ -1,7 +1,9 @@
 const axios = require("axios").default;
-const log = require("../../index");
+const fs = require("fs");
 
 let idToken = [];
+const dataPath = "./daneTokenID.json";
+
 
 FunkcjaLogi = async (req, res) => {
 	const login = req.body.username;
@@ -18,7 +20,9 @@ FunkcjaLogi = async (req, res) => {
 		// idToken.push(daneID);
 		idToken.splice(0, 1, daneID);
 		// idToken = daneID;
-		log.login1(idToken);
+
+		storeData(idToken, dataPath);
+		
 	} catch (err) {
 		console.log(err);
 	}
@@ -48,11 +52,24 @@ logowanie1 = async (login, password) => {
 		.catch(function (error) {
 			console.log(error);
 		});
-	// console.log(tokenID);
 	return tokenID;
 };
+
+
+const storeData = (data, path) => {
+		try {
+			fs.writeFileSync(path, JSON.stringify(data), {
+				encoding: "utf8",
+			});
+			console.log("zapisany Token Użytkownika");
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 
 module.exports = {
 	idToken,
 	FunkcjaLogi,
+	dataPath,
 };

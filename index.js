@@ -6,8 +6,10 @@ const morgan = require("morgan");
 const xlsx = require("xlsx");
 const jasonObject = require("./test.json");
 
-const { FunkcjaLogi, idToken } = require("./controllers/auth/login");
+const { FunkcjaLogi, idToken, dataPath } = require("./controllers/auth/login");
 const { Refresh } = require("./controllers/auth/refresh");
+const { SearchAll, tabIdOkaz, tabId} = require("./controllers/szukanieAll/searchOgolne");
+
 
 const { json } = require("stream/consumers");
 
@@ -19,63 +21,43 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const dataPath = "./daneTokenID.json";
+// const dataPath = "./daneTokenID.json";
 
+//ID LOGOWANIA
 idToken;
 
-let tabIdOkaz = [];
+// TABLICA Z DANYMI Z WYSZUKIWANIA OGÓLNEGO
+tabIdOkaz
 
-let tabId = [];
+// ID REKORDU - WYSZUKIWANIE OGÓLNE
+tabId
 
 let rekordDaneDlugosc = [];
 let daneRekordu = [];
 
 // let pauzaID = [];
 
+
+
+// LOGOWANIE
 app.post("/logowanie", FunkcjaLogi);
+// LOGOWANIE
 
-exports.login1 = (idToken) => {
-	console.log(idToken);
-	console.log("klops!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	storeData(idToken, dataPath);
-};
-
-const storeData = (data, path) => {
-	try {
-		fs.writeFileSync(path, JSON.stringify(data), {
-			encoding: "utf8",
-		});
-		console.log("zapisany Token Użytkownika");
-	} catch (err) {
-		console.error(err);
-	}
-};
-
+// ODŚWIERZANIE TOKENU
 app.post("/refresh", Refresh);
+// ODŚWIERZANIE TOKENU
 
-app.post("/szukanie", async (req, res) => {
-	const { filter, pagination } = req.body;
-	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
 
-	try {
-		let daneWysz = "";
-		await Search().then(function (dane) {
-			daneWysz = dane;
-		});
-		// console.log(daneWysz);
-		res.send(daneWysz);
-		tabIdOkaz.splice(0, 1, daneWysz.items);
-		// console.log("zrobione")
-		// console.log(tabIdOkaz[0])
-		TabOkaz();
-	} catch (error) {
-		console.log(error);
-	}
-});
+// SZUKANIE OGÓLNE
+app.post("/szukanie", SearchAll);
+// SZUKANIE OGÓLNE
+
+
 
 app.post("/ident_gatunek", async (req, res) => {
 	// const { filter, pagination } = req.body;
 	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
+	console.log("działa!!!!!!!!!!!")
 
 	for (let i = 0; i < tabId.length; i++) {
 		const elementID = tabId[i];
@@ -86,15 +68,29 @@ app.post("/ident_gatunek", async (req, res) => {
 			daneGatunek = dane;
 		});
 
-		let objektDane = {
-			ID: daneGatunek.kolekcjanumerokazu,
-			instytucja: daneGatunek.instytucja,
-			państwo: daneGatunek.panstwo,
-			kolekcja: daneGatunek.kolekcja,
-		};
+		daneRekordu.splice(
+			daneRekordu.length - 1,
+			0,
+			daneGatunek.kolekcjanumerokazu
+		);
 
-		o.push(objektDane);
-		console.log(o);
+		if (i == tabId.length - 1) {
+			console.log("koniec");
+			console.log(daneRekordu);
+			// res.send(daneRekordu);
+			// IdBrakki();
+			JasonToExcel(o);
+		}
+
+		// let objektDane = {
+		// 	ID: daneGatunek.kolekcjanumerokazu,
+		// 	instytucja: daneGatunek.instytucja,
+		// 	państwo: daneGatunek.panstwo,
+		// 	kolekcja: daneGatunek.kolekcja,
+		// };
+
+		// o.push(objektDane);
+		// console.log(o);
 		// console.log(objektDane);
 		res.status(200).end();
 
@@ -120,19 +116,7 @@ app.post("/ident_gatunek", async (req, res) => {
 		// console.log("zrobione")
 		// console.log(tabIdOkaz[0])
 		// TabOkaz();
-		daneRekordu.splice(
-			daneRekordu.length - 1,
-			0,
-			daneGatunek.kolekcjanumerokazu
-		);
-
-		if (i == tabId.length - 1) {
-			console.log("koniec");
-			console.log(daneRekordu);
-			// res.send(daneRekordu);
-			// IdBrakki();
-			JasonToExcel(o);
-		}
+		
 	}
 	try {
 		// res.send(rekordDaneDlugosc);
@@ -153,10 +137,10 @@ JasonToExcel = (x) => {
 // 	console.log(rekordDaneDlugosc);
 // };
 
-const TabOkaz = () => {
-	tabId = tabIdOkaz[0].map((idKolekcja) => idKolekcja.kolekcjanumerokazu);
-	console.log(tabId);
-};
+// const TabOkaz = () => {
+// 	tabId = tabIdOkaz[0].map((idKolekcja) => idKolekcja.kolekcjanumerokazu);
+// 	console.log(tabId);
+// };
 
 const o = new Object([]);
 
@@ -189,68 +173,37 @@ app.listen(8888, () => {
 	console.log("aplikacja działa!!!!");
 });
 
-RefreshToken = async (refreshID) => {
-	let newRefreshID = "";
-	console.log("-------------------------------------------------");
-	await axios
-		.post(
-			"https://api.amunatcoll.pl/refresh_token/",
-			{
-				refresh: refreshID,
-			},
-			{
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json",
-					"access-control-allow-credentials": "true",
-				},
-			}
-		)
-		.then(function (response) {
-			newRefreshID = response.data;
-			console.log(
-				"dane z refresh!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-			);
-			// console.log(newRefreshID);
-			idToken.splice(0, 1, newRefreshID);
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
-	// console.log(tokenID);
-	return newRefreshID;
-};
 
-Search = async (filter, paginacja) => {
-	let daneWyszykania = "";
-	await axios
-		.post(
-			"https://api.amunatcoll.pl/anc/taxons/search/",
-			{
-				filter: { kolekcjanumerokazu: "POZ-V" },
-				pagination: { currentPage: 1, perPage: 200 },
-			},
-			{
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json",
-					"access-control-allow-credentials": "true",
-					Authorization: `Bearer ${idToken[0].access}`,
-				},
-			}
-		)
-		.then(function (response) {
-			daneWyszykania = response.data;
-			console.log(
-				"dane z wyszukiwania!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-			);
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
-	// console.log(tokenID);
-	return daneWyszykania;
-};
+// Search = async (filter, paginacja) => {
+// 	let daneWyszykania = "";
+// 	await axios
+// 		.post(
+// 			"https://api.amunatcoll.pl/anc/taxons/search/",
+// 			{
+// 				filter: { kolekcjanumerokazu: "POZ-V" },
+// 				pagination: { currentPage: 1, perPage: 200 },
+// 			},
+// 			{
+// 				headers: {
+// 					Accept: "application/json",
+// 					"Content-Type": "application/json",
+// 					"access-control-allow-credentials": "true",
+// 					Authorization: `Bearer ${idToken[0].access}`,
+// 				},
+// 			}
+// 		)
+// 		.then(function (response) {
+// 			daneWyszykania = response.data;
+// 			console.log(
+// 				"dane z wyszukiwania!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+// 			);
+// 		})
+// 		.catch(function (error) {
+// 			console.log(error);
+// 		});
+// 	// console.log(tokenID);
+// 	return daneWyszykania;
+// };
 
 SearchIdRekord = async (filter) => {
 	let daneGatunek = "";
@@ -265,7 +218,7 @@ SearchIdRekord = async (filter) => {
 		})
 		.then(function (response) {
 			daneGatunek = response.data;
-			// console.log("dany rekord aktywny")
+			console.log("dany rekord aktywny")
 		})
 		.catch(function (error) {
 			console.log(error);
