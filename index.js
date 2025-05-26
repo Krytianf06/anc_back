@@ -53,19 +53,20 @@ app.post("/szukanie", SearchAll);
 // SZUKANIE OGÓLNE
 
 app.post("/ident_gatunek", async (req, res) => {
-	// const iDsipww = fs.readFileSync(idsipwwPath, {
-	// 	encoding: "utf8",
-	// });
-	// let sipww = JSON.parse(iDsipww);
-	// console.log(sipww[0].ID);
-	let postep = [];
-	const loadIDrekordu = fs.readFileSync(dataIDrekordu, {
+	const iDsipww = fs.readFileSync(idsipwwPath, {
 		encoding: "utf8",
 	});
-	let IDrekord = JSON.parse(loadIDrekordu);
+	let sipww = JSON.parse(iDsipww);
+	// console.log(sipww[0].ID);
+	let postep = [];
 
-	for (let i = 0; i < IDrekord.length; i++) {
-		const elementID = IDrekord[i];
+	// const loadIDrekordu = fs.readFileSync(dataIDrekordu, {
+	// 	encoding: "utf8",
+	// });
+	// let IDrekord = JSON.parse(loadIDrekordu);
+
+	for (let i = 0; i < sipww.length; i++) {
+		const elementID = sipww[i].ID;
 		console.log(i);
 		console.log(elementID);
 		postep.splice(0, 1, i);
@@ -82,6 +83,22 @@ app.post("/ident_gatunek", async (req, res) => {
 				ref.RefreshToken(login.idToken[0].refresh);
 				i = postep[0] - 1;
 			}
+			if (response.status == 200) {
+				daneGatunek = response.data;
+			}
+
+			let objektDane = {
+				ID: daneGatunek.kolekcjanumerokazu,
+				państwo: daneGatunek.panstwo,
+				powiat: daneGatunek.powiat,
+				gatunekrodzaj: daneGatunek.rodzajgatunek,
+				lokalizacja: daneGatunek.lokalizacjastanowisko,
+				dlugosc: daneGatunek.dlugoscgeograficzna,
+				szerokosc: daneGatunek.szerokoscgeograficzna,
+				komentarze: daneGatunek.georeferencjakomentarze,
+			};
+
+			o.push(objektDane);
 
 			// console.log(daneGatunek.status);
 			console.log("?????????????????????????????????????????????");
@@ -105,13 +122,7 @@ app.post("/ident_gatunek", async (req, res) => {
 	// 		JasonToExcel(o);
 	// 	}
 
-	// let objektDane = {
-	// 	ID: daneGatunek.kolekcjanumerokazu,
-	// 	instytucja: daneGatunek.instytucja,
-	// 	państwo: daneGatunek.panstwo,
-	// 	kolekcja: daneGatunek.kolekcja,
-	// };
-
+	JasonToExcel(o);
 	// o.push(objektDane);
 	// console.log(o);
 	// console.log(objektDane);
@@ -153,6 +164,7 @@ JasonToExcel = (x) => {
 	const workSheet = xlsx.utils.json_to_sheet(x);
 	xlsx.utils.book_append_sheet(workBook, workSheet);
 	xlsx.writeFile(workBook, "daneToExcel2.xlsx");
+	console.log("**************Zapisany Plik**************");
 };
 
 // const IdBrakki = () => {
