@@ -5,14 +5,15 @@ const cors = require("cors");
 const morgan = require("morgan");
 const xlsx = require("xlsx");
 const jasonObject = require("./test.json");
-const db = require("./baza");
+const login = require("./controllers/auth/login");
+const { dataPath } = require("./controllers/auth/login");
+const ref = require("./controllers/auth/refresh");
+// const { Refresh, RefreshToken } = require("./controllers/auth/refresh");
 
-const { FunkcjaLogi, idToken, dataPath } = require("./controllers/auth/login");
-const { Refresh } = require("./controllers/auth/refresh");
 const {
 	SearchAll,
 	tabIdOkaz,
-	tabId,
+	dataIDrekordu,
 } = require("./controllers/szukanieAll/searchOgolne");
 
 const { json } = require("stream/consumers");
@@ -26,37 +27,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // const dataPath = "./daneTokenID.json";
-
+const idsipwwPath = "./csvjson.json";
 //ID LOGOWANIA
-idToken;
 
 // TABLICA Z DANYMI Z WYSZUKIWANIA OGÓLNEGO
 tabIdOkaz;
 
 // ID REKORDU - WYSZUKIWANIE OGÓLNE
-tabId;
 
 let rekordDaneDlugosc = [];
 let daneRekordu = [];
 
 // let pauzaID = [];
 
-app.get("/test123", async (req, res) => {
-	try {
-		let sql = "SELECT * FROM mollusca_helix_pomatia_pl_1";
-		const result = await db.pool.query(sql);
-		res.send(result);
-	} catch (err) {
-		console.log(err);
-	}
-});
-
 // LOGOWANIE
-app.post("/logowanie", FunkcjaLogi);
+app.post("/logowanie", login.FunkcjaLogi);
 // LOGOWANIE
 
 // ODŚWIERZANIE TOKENU
-app.post("/refresh", Refresh);
+app.post("/refresh", ref.Refresh);
 // ODŚWIERZANIE TOKENU
 
 // SZUKANIE OGÓLNE
@@ -64,74 +53,99 @@ app.post("/szukanie", SearchAll);
 // SZUKANIE OGÓLNE
 
 app.post("/ident_gatunek", async (req, res) => {
-	// const { filter, pagination } = req.body;
-	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
-	console.log("działa!!!!!!!!!!!");
+	// const iDsipww = fs.readFileSync(idsipwwPath, {
+	// 	encoding: "utf8",
+	// });
+	// let sipww = JSON.parse(iDsipww);
+	// console.log(sipww[0].ID);
+	let postep = [];
+	const loadIDrekordu = fs.readFileSync(dataIDrekordu, {
+		encoding: "utf8",
+	});
+	let IDrekord = JSON.parse(loadIDrekordu);
 
-	for (let i = 0; i < tabId.length; i++) {
-		const elementID = tabId[i];
+	for (let i = 0; i < IDrekord.length; i++) {
+		const elementID = IDrekord[i];
 		console.log(i);
+		console.log(elementID);
+		postep.splice(0, 1, i);
 
 		let daneGatunek = "";
-		await SearchIdRekord(elementID).then(function (dane) {
-			daneGatunek = dane;
+		await SearchIdRekord(elementID, login.idToken[0].access).then(function (
+			response
+		) {
+			if (response.status == 401) {
+				// LoadeData();
+				// async () => {
+				// 	await ref.RefreshToken(login.idToken[0].refresh)
+				// }
+				ref.RefreshToken(login.idToken[0].refresh);
+				i = postep[0] - 1;
+			}
+
+			// console.log(daneGatunek.status);
+			console.log("?????????????????????????????????????????????");
+			console.log(response.status);
+			// console.log(login.idToken[0])
+			console.log("?????????????????????????????????????????????");
 		});
-
-		daneRekordu.splice(
-			daneRekordu.length - 1,
-			0,
-			daneGatunek.kolekcjanumerokazu
-		);
-
-		if (i == tabId.length - 1) {
-			console.log("koniec");
-			console.log(daneRekordu);
-			// res.send(daneRekordu);
-			// IdBrakki();
-			JasonToExcel(o);
-		}
-
-		// let objektDane = {
-		// 	ID: daneGatunek.kolekcjanumerokazu,
-		// 	instytucja: daneGatunek.instytucja,
-		// 	państwo: daneGatunek.panstwo,
-		// 	kolekcja: daneGatunek.kolekcja,
-		// };
-
-		// o.push(objektDane);
-		// console.log(o);
-		// console.log(objektDane);
-		res.status(200).end();
-
-		// console.log(daneGatunek);
-
-		// Parametry wyszukiwania - sprawdzenie danych
-		// if (
-		// 	daneGatunek.lokalizacjastanowisko == "bd" ||
-		// 	daneGatunek.lokalizacjastanowisko == null
-		// ) {
-		// 	console.log(`puste + ${i}`);
-		// } else if (
-		// 	daneGatunek.kontynent != null &&
-		// 	daneGatunek.dlugoscgeograficzna == null
-		// ) {
-		// 	rekordDaneDlugosc.push(
-		// 		`${daneGatunek.dlugoscgeograficzna} + ${daneGatunek.kolekcjanumerokazu}`
-		// 	);
-		// 	console.log(daneGatunek.kolekcjanumerokazu);
-		// }
-
-		// tabIdOkaz.splice(0, 1, daneGatunek.items);
-		// console.log("zrobione")
-		// console.log(tabIdOkaz[0])
-		// TabOkaz();
 	}
-	try {
-		// res.send(rekordDaneDlugosc);
-		res.status(200);
-	} catch (error) {
-		console.log(error);
-	}
+
+	// 	daneRekordu.splice(
+	// 		daneRekordu.length - 1,
+	// 		0,
+	// 		daneGatunek.kolekcjanumerokazu
+	// 	);
+
+	// 	if (i == tabId.length - 1) {
+	// 		console.log("koniec");
+	// 		console.log(daneRekordu);
+	// 		// res.send(daneRekordu);
+	// 		// IdBrakki();
+	// 		JasonToExcel(o);
+	// 	}
+
+	// let objektDane = {
+	// 	ID: daneGatunek.kolekcjanumerokazu,
+	// 	instytucja: daneGatunek.instytucja,
+	// 	państwo: daneGatunek.panstwo,
+	// 	kolekcja: daneGatunek.kolekcja,
+	// };
+
+	// o.push(objektDane);
+	// console.log(o);
+	// console.log(objektDane);
+	res.status(200).end();
+
+	// console.log(daneGatunek);
+
+	// Parametry wyszukiwania - sprawdzenie danych
+	// if (
+	// 	daneGatunek.lokalizacjastanowisko == "bd" ||
+	// 	daneGatunek.lokalizacjastanowisko == null
+	// ) {
+	// 	console.log(`puste + ${i}`);
+	// } else if (
+	// 	daneGatunek.kontynent != null &&
+	// 	daneGatunek.dlugoscgeograficzna == null
+	// ) {
+	// 	rekordDaneDlugosc.push(
+	// 		`${daneGatunek.dlugoscgeograficzna} + ${daneGatunek.kolekcjanumerokazu}`
+	// 	);
+	// 	console.log(daneGatunek.kolekcjanumerokazu);
+	// }
+
+	// tabIdOkaz.splice(0, 1, daneGatunek.items);
+	// console.log("zrobione")
+	// console.log(tabIdOkaz[0])
+	// TabOkaz();
+	// }
+	// try {
+	// 	// res.send(rekordDaneDlugosc);
+	// 	res.status(200);
+	// } catch (error) {
+	// 	console.log(error);
+	// }
 });
 
 JasonToExcel = (x) => {
@@ -181,38 +195,7 @@ app.listen(8888, () => {
 	console.log("aplikacja działa!!!!");
 });
 
-// Search = async (filter, paginacja) => {
-// 	let daneWyszykania = "";
-// 	await axios
-// 		.post(
-// 			"https://api.amunatcoll.pl/anc/taxons/search/",
-// 			{
-// 				filter: { kolekcjanumerokazu: "POZ-V" },
-// 				pagination: { currentPage: 1, perPage: 200 },
-// 			},
-// 			{
-// 				headers: {
-// 					Accept: "application/json",
-// 					"Content-Type": "application/json",
-// 					"access-control-allow-credentials": "true",
-// 					Authorization: `Bearer ${idToken[0].access}`,
-// 				},
-// 			}
-// 		)
-// 		.then(function (response) {
-// 			daneWyszykania = response.data;
-// 			console.log(
-// 				"dane z wyszukiwania!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-// 			);
-// 		})
-// 		.catch(function (error) {
-// 			console.log(error);
-// 		});
-// 	// console.log(tokenID);
-// 	return daneWyszykania;
-// };
-
-SearchIdRekord = async (filter) => {
+SearchIdRekord = async (filter, token) => {
 	let daneGatunek = "";
 	await axios
 		.get(`https://api.amunatcoll.pl/anc/taxons/details/${filter}/`, {
@@ -220,15 +203,16 @@ SearchIdRekord = async (filter) => {
 				Accept: "application/json",
 				"Content-Type": "application/json",
 				"access-control-allow-credentials": "true",
-				Authorization: `Bearer ${idToken[0].access}`,
+				Authorization: `Bearer ${token}`,
 			},
 		})
 		.then(function (response) {
-			daneGatunek = response.data;
+			daneGatunek = response;
 			console.log("dany rekord aktywny");
 		})
 		.catch(function (error) {
-			console.log(error);
+			// console.log(error);
+			daneGatunek = error;
 		});
 	// console.log(tokenID);
 	return daneGatunek;
@@ -240,9 +224,9 @@ LoadeData = async () => {
 			encoding: "utf8",
 		});
 
-		idToken.splice(0, 1, JSON.parse(loadID)[0]);
+		login.idToken.splice(0, 1, JSON.parse(loadID)[0]);
 		console.log("Wczytywanie Token Użytkownika");
-		console.log(idToken);
+		console.log(login.idToken);
 	} catch (err) {
 		console.error(err);
 	}

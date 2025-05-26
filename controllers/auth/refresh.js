@@ -54,4 +54,5 @@ RefreshToken = async (refreshID) => {
 
 module.exports = {
 	Refresh,
+	RefreshToken,
 };

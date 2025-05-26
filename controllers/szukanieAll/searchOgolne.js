@@ -1,11 +1,14 @@
 const axios = require("axios").default;
-const token = require("../auth/login")
+const fs = require("fs");
+const token = require("../auth/login");
 let tabIdOkaz = [];
 let tabId = [];
 
+const dataIDrekordu = "./daneIDrekordu.json";
+
 SearchAll = async (req, res) => {
 	const { filter, pagination } = req.body;
-    console.log("dane wukane!!")
+	console.log("dane wukane!!");
 	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
 
 	try {
@@ -22,7 +25,7 @@ SearchAll = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 	}
-}
+};
 
 Search = async (filter, paginacja) => {
 	let daneWyszykania = "";
@@ -31,7 +34,7 @@ Search = async (filter, paginacja) => {
 			"https://api.amunatcoll.pl/anc/taxons/search/",
 			{
 				filter: { kolekcjanumerokazu: "POZ-V" },
-				pagination: { currentPage: 1, perPage: 20 },
+				pagination: { currentPage: 1, perPage: 3000 },
 			},
 			{
 				headers: {
@@ -55,16 +58,26 @@ Search = async (filter, paginacja) => {
 	return daneWyszykania;
 };
 
-
 const TabOkaz = () => {
-    tabId = tabIdOkaz[0].map((idKolekcja) => idKolekcja.kolekcjanumerokazu);
-    console.log("zapisane ID");
-    console.log(tabId);
+	tabId = tabIdOkaz[0].map((idKolekcja) => idKolekcja.kolekcjanumerokazu);
+	console.log("zapisane ID");
+	console.log(tabId);
+	storeData(tabId, dataIDrekordu);
 };
 
+const storeData = (data, path) => {
+	try {
+		fs.writeFileSync(path, JSON.stringify(data), {
+			encoding: "utf8",
+		});
+		console.log("zapisany ID rekordów");
+	} catch (err) {
+		console.error(err);
+	}
+};
 
 module.exports = {
 	SearchAll,
-    tabIdOkaz,
-    tabId,
+	tabIdOkaz,
+	dataIDrekordu,
 };

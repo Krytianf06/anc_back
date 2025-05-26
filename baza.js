@@ -1,12 +1,11 @@
 const mariadb = require("mariadb");
 
 const pool = mariadb.createPool({
-	host: "db.web.amu.edu.pl",
-	user: "kf63083_sqlanc",
-	password: "Krychu11L19*",
-	database: "kf63083_sqlanc",
-	port: "3306",
-	connectionLimit: 5
+	host: "localhost",
+	user: "root",
+	password: "",
+	database: "test",
+	port: "3306"
 });
 
 
@@ -15,7 +14,7 @@ async function asyncFunction() {
   let conn;
   try {
 	conn = await pool.getConnection();
-	const rows = await conn.query("SELECT * FROM `mollusca_helix_pomatia_pl_1`");
+	const rows = await conn.query("SELECT * FROM `test`");
 	console.log(rows); //[ {val: 1}, meta: ... ]
 
   } catch (err) {
