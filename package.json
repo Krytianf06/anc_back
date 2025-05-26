@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
+		"baza": "baza.js",
 		"dev": "nodemon index.js",
 		"zap": "nodemon zap.js",
 		"testy": "node test.js",
@@ -16,7 +17,9 @@
 		"axios": "^1.8.2",
 		"cors": "^2.8.5",
 		"express": "^4.21.2",
+		"mariadb": "^3.4.2",
 		"morgan": "^1.10.0",
+		"mysql2": "^3.14.1",
 		"node-fetch": "^3.3.2",
 		"nodemon": "^3.1.9",
 		"xlsx": "^0.18.5"

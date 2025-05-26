@@ -5,11 +5,15 @@ const cors = require("cors");
 const morgan = require("morgan");
 const xlsx = require("xlsx");
 const jasonObject = require("./test.json");
+const db = require("./baza");
 
 const { FunkcjaLogi, idToken, dataPath } = require("./controllers/auth/login");
 const { Refresh } = require("./controllers/auth/refresh");
-const { SearchAll, tabIdOkaz, tabId} = require("./controllers/szukanieAll/searchOgolne");
-
+const {
+	SearchAll,
+	tabIdOkaz,
+	tabId,
+} = require("./controllers/szukanieAll/searchOgolne");
 
 const { json } = require("stream/consumers");
 
@@ -27,17 +31,25 @@ app.use(express.urlencoded({ extended: true }));
 idToken;
 
 // TABLICA Z DANYMI Z WYSZUKIWANIA OGÓLNEGO
-tabIdOkaz
+tabIdOkaz;
 
 // ID REKORDU - WYSZUKIWANIE OGÓLNE
-tabId
+tabId;
 
 let rekordDaneDlugosc = [];
 let daneRekordu = [];
 
 // let pauzaID = [];
 
-
+app.get("/test123", async (req, res) => {
+	try {
+		let sql = "SELECT * FROM mollusca_helix_pomatia_pl_1";
+		const result = await db.pool.query(sql);
+		res.send(result);
+	} catch (err) {
+		console.log(err);
+	}
+});
 
 // LOGOWANIE
 app.post("/logowanie", FunkcjaLogi);
@@ -47,17 +59,14 @@ app.post("/logowanie", FunkcjaLogi);
 app.post("/refresh", Refresh);
 // ODŚWIERZANIE TOKENU
 
-
 // SZUKANIE OGÓLNE
 app.post("/szukanie", SearchAll);
 // SZUKANIE OGÓLNE
 
-
-
 app.post("/ident_gatunek", async (req, res) => {
 	// const { filter, pagination } = req.body;
 	// console.log(filter.kolekcjanumerokazu, pagination.currentPage);
-	console.log("działa!!!!!!!!!!!")
+	console.log("działa!!!!!!!!!!!");
 
 	for (let i = 0; i < tabId.length; i++) {
 		const elementID = tabId[i];
@@ -116,7 +125,6 @@ app.post("/ident_gatunek", async (req, res) => {
 		// console.log("zrobione")
 		// console.log(tabIdOkaz[0])
 		// TabOkaz();
-		
 	}
 	try {
 		// res.send(rekordDaneDlugosc);
@@ -173,7 +181,6 @@ app.listen(8888, () => {
 	console.log("aplikacja działa!!!!");
 });
 
-
 // Search = async (filter, paginacja) => {
 // 	let daneWyszykania = "";
 // 	await axios
@@ -218,7 +225,7 @@ SearchIdRekord = async (filter) => {
 		})
 		.then(function (response) {
 			daneGatunek = response.data;
-			console.log("dany rekord aktywny")
+			console.log("dany rekord aktywny");
 		})
 		.catch(function (error) {
 			console.log(error);
