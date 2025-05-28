@@ -85,9 +85,8 @@ app.post("/ident_gatunek", async (req, res) => {
 			}
 			if (response.status == 200) {
 				daneGatunek = response.data;
-			}
 
-			let objektDane = {
+				let objektDane = {
 				ID: daneGatunek.kolekcjanumerokazu,
 				państwo: daneGatunek.panstwo,
 				powiat: daneGatunek.powiat,
@@ -98,7 +97,13 @@ app.post("/ident_gatunek", async (req, res) => {
 				komentarze: daneGatunek.georeferencjakomentarze,
 			};
 
-			o.push(objektDane);
+				o.push(objektDane);
+
+			}
+
+			
+
+			
 
 			// console.log(daneGatunek.status);
 			console.log("?????????????????????????????????????????????");
