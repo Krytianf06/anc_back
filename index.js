@@ -87,23 +87,28 @@ app.post("/ident_gatunek", async (req, res) => {
 				daneGatunek = response.data;
 
 				let objektDane = {
-				ID: daneGatunek.kolekcjanumerokazu,
-				państwo: daneGatunek.panstwo,
-				powiat: daneGatunek.powiat,
-				gatunekrodzaj: daneGatunek.rodzajgatunek,
-				lokalizacja: daneGatunek.lokalizacjastanowisko,
-				dlugosc: daneGatunek.dlugoscgeograficzna,
-				szerokosc: daneGatunek.szerokoscgeograficzna,
-				komentarze: daneGatunek.georeferencjakomentarze,
-			};
+					ID: daneGatunek.kolekcjanumerokazu,
+					gatunekrodzaj: daneGatunek.rodzajgatunek,
+					siedlisko: daneGatunek.siedlisko,
+					lokalizacja: daneGatunek.lokalizacjastanowisko,
+					lokalizacjakomentarze: daneGatunek.lokalizacjakomentarze,
+					dlugosc: daneGatunek.dlugoscgeograficzna,
+					szerokosc: daneGatunek.szerokoscgeograficzna,
+					komentarze: daneGatunek.georeferencjakomentarze,
+					geodokladnosc: daneGatunek.geodokladnosc,
+					państwo: daneGatunek.panstwo,
+					powiat: daneGatunek.powiat,
+					gmina: daneGatunek.gmina,
+					opisuwagi: daneGatunek.opisuwagi,
+					siedlisko0: daneGatunek.siedlisko0,
+					siedlisko1: daneGatunek.siedlisko1,
+					wojewodztwo: daneGatunek.wojewodztwo,
+					wspolrzedne: daneGatunek.wspolrzedne,
+				};
 
 				o.push(objektDane);
-
+				console.log("**************Rekord dodany****************");
 			}
-
-			
-
-			
 
 			// console.log(daneGatunek.status);
 			console.log("?????????????????????????????????????????????");
@@ -168,7 +173,7 @@ JasonToExcel = (x) => {
 	const workBook = xlsx.utils.book_new();
 	const workSheet = xlsx.utils.json_to_sheet(x);
 	xlsx.utils.book_append_sheet(workBook, workSheet);
-	xlsx.writeFile(workBook, "daneToExcel2.xlsx");
+	xlsx.writeFile(workBook, "daneToExcel3.xlsx");
 	console.log("**************Zapisany Plik**************");
 };
 
