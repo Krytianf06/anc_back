@@ -1,7 +1,7 @@
 {
-  kolekcjanumerokazu: 'POZ-V-0000012',
-  numerokazu: 12,
-  rodzajgatunek: 'Isoetes hystrix',
+  kolekcjanumerokazu: 'POZ-V-0000012', - jest
+  numerokazu: 12,                     
+  rodzajgatunek: 'Isoetes hystrix',   - jest
   administracjapanstwowaisamorzadowa: null,
   autorgatunku: 'Dur.',
   autoroznaczenia: 'Durando G. L.',

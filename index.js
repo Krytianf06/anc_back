@@ -87,92 +87,105 @@ app.post("/ident_gatunek", async (req, res) => {
 				daneGatunek = response.data;
 
 				let objektDane = {
+					instytucja: daneGatunek.instytucja,
+					botanikazoologia: daneGatunek.botanikazoologia,
 					ID: daneGatunek.kolekcjanumerokazu,
+					zrodlo: daneGatunek.zrodlo,
+					rodzaj: daneGatunek.rodzaj,
+					podrodzaj: daneGatunek.podrodzaj,
+					gatunek: daneGatunek.gatunek,
 					gatunekrodzaj: daneGatunek.rodzajgatunek,
-					siedlisko: daneGatunek.siedlisko,
-					lokalizacja: daneGatunek.lokalizacjastanowisko,
-					lokalizacjakomentarze: daneGatunek.lokalizacjakomentarze,
-					szerokosc: daneGatunek.szerokoscgeograficzna,
-					dlugosc: daneGatunek.dlugoscgeograficzna,
-					komentarze: daneGatunek.georeferencjakomentarze,
-					geodokladnosc: daneGatunek.geodokladnosc,
-					państwo: daneGatunek.panstwo,
-					powiat: daneGatunek.powiat,
-					gmina: daneGatunek.gmina,
-					opisuwagi: daneGatunek.opisuwagi,
-					siedlisko0: daneGatunek.siedlisko0,
-					siedlisko1: daneGatunek.siedlisko1,
-					wojewodztwo: daneGatunek.wojewodztwo,
-					wspolrzedne: daneGatunek.wspolrzedne,
 					autorgatunku: daneGatunek.autorgatunku,
-					autoroznaczenia: daneGatunek.autoroznaczenia,
+					taksonnizszegorzedu: daneGatunek.taksonnizszegorzedu,
+					rangataksonunizszegorzedu: daneGatunek.rangataksonunizszegorzedu,
+					kwalifikatorhybrydylubchimery:
+						daneGatunek.kwalifikatorhybrydylubchimery,
+					oznaczeniehybrydy: daneGatunek.oznaczeniehybrydy,
+					autortaksonunizszegorzedu: daneGatunek.autortaksonunizszegorzedu,
+					jednostkanadrzedna: daneGatunek.jednostkanadrzedna,
+					rangajednostkinadrzednej: daneGatunek.rangajednostkinadrzednej,
+					plec: daneGatunek.plec,
+					wiek: daneGatunek.wiek,
+					stadium: daneGatunek.stadium,
+					wymiary: daneGatunek.wymiary,
+					rodzajtypunomenklatorycznego:
+						daneGatunek.rodzajtypunomenklatorycznego,
+					materialdowodowy: daneGatunek.materialdowodowy,
+					wypozyczony: daneGatunek.wypozyczony,
+					stanopracowaniakolekcji: daneGatunek.stanopracowaniakolekcji,
 					autorzbioru: daneGatunek.autorzbioru,
 					autorzbiorudodatkowyopis: daneGatunek.autorzbiorudodatkowyopis,
-					bibliografia: daneGatunek.bibliografia,
-					botanikazoologia: daneGatunek.botanikazoologia,
-					datainne: daneGatunek.datainne,
+					numerzbioruokreslonegoautora:
+						daneGatunek.numerzbioruokreslonegoautora,
+					autoroznaczenia: daneGatunek.autoroznaczenia,
 					dataoznaczeniazbioru: daneGatunek.dataoznaczeniazbioru,
 					datazebraniaokazuproby: daneGatunek.datazebraniaokazuproby,
 					datazebraniaprobykoniec: daneGatunek.datazebraniaprobykoniec,
-					gatunek: daneGatunek.gatunek,
-					geodokladnosc: daneGatunek.geodokladnosc,
-					habitat: daneGatunek.habitat,
-					instytucja: daneGatunek.instytucja,
-					jednostkanadrzedna: daneGatunek.jednostkanadrzedna,
-					koditypobszarunatura2000: daneGatunek.koditypobszarunatura2000,
-					kontynent: daneGatunek.kontynent,
-					kwalifikatorhybrydylubchimery:
-						daneGatunek.kwalifikatorhybrydylubchimery,
-					locationsite: daneGatunek.locationsite,
-					materialdowodowy: daneGatunek.materialdowodowy,
+					datainne: daneGatunek.datainne,
 					metodazbioru: daneGatunek.metodazbioru,
-					nazwaobszarunatura2000: daneGatunek.nazwaobszarunatura2000,
-					numerproby: daneGatunek.numerproby,
-					numerzbioruokreslonegoautora:
-						daneGatunek.numerzbioruokreslonegoautora,
-					obszarchronionegokrajobrazu: daneGatunek.obszarchronionegokrajobrazu,
-					obszarchroniony: daneGatunek.obszarchroniony,
-					opakowanienajnizszegorzedu: daneGatunek.opakowanienajnizszegorzedu,
-					opakowaniezbiorcze: daneGatunek.opakowaniezbiorcze,
-					opisuwagi: daneGatunek.opisuwagi,
-					oznaczeniehybrydy: daneGatunek.oznaczeniehybrydy,
-					parkkrajobrazowy: daneGatunek.parkkrajobrazowy,
-					parknarodowy: daneGatunek.parknarodowy,
-					plec: daneGatunek.plec,
-					pochodzenieokazu: daneGatunek.pochodzenieokazu,
+					siedlisko: daneGatunek.siedlisko,
+					siedlisko0: daneGatunek.siedlisko0,
+					siedlisko1: daneGatunek.siedlisko1,
+					habitat: daneGatunek.habitat,
 					podloze: daneGatunek.podloze,
-					podrodzaj: daneGatunek.podrodzaj,
+					sposobprzechowywania: daneGatunek.sposobprzechowywania,
+					sposobyprzechowywaniasposobkonserwacjiizabezpieczenia:
+						daneGatunek.sposobyprzechowywaniasposobkonserwacjiizabezpieczenia,
+					pomieszczenie: daneGatunek.pomieszczenie,
+					regalszafa: daneGatunek.regalszafa,
 					polkaszafaentomologiczna: daneGatunek.polkaszafaentomologiczna,
-					polozeniewpodzialebiogeograficznymeuropy:
-						daneGatunek.polozeniewpodzialebiogeograficznymeuropy,
-					polozeniewpodzialefizjograficznym:
-						daneGatunek.polozeniewpodzialefizjograficznym,
-					polozeniewpodzialegeograficznympotencjalnejroslinnoscinaturalne:
-						daneGatunek.polozeniewpodzialegeograficznympotencjalnejroslinnoscinaturalne,
+					opakowaniezbiorcze: daneGatunek.opakowaniezbiorcze,
+					opakowanienajnizszegorzedu: daneGatunek.opakowanienajnizszegorzedu,
+					numerproby: daneGatunek.numerproby,
+					lokalizacja: daneGatunek.lokalizacjastanowisko,
+					locationsite: daneGatunek.locationsite,
 					polozeniewzgledempoziomumorza:
 						daneGatunek.polozeniewzgledempoziomumorza,
-					pomieszczenie: daneGatunek.pomieszczenie,
-					pracownicynaukowidoktoranci: daneGatunek.pracownicynaukowidoktoranci,
-					rangajednostkinadrzednej: daneGatunek.rangajednostkinadrzednej,
-					regalszafa: daneGatunek.regalszafa,
-					rezerwatprzyrody: daneGatunek.rezerwatprzyrody,
-					rodzaj: daneGatunek.rodzaj,
-					rodzajityprezerwatu: daneGatunek.rodzajityprezerwatu,
-					rodzajtypunomenklatorycznego:
-						daneGatunek.rodzajtypunomenklatorycznego,
-					stadium: daneGatunek.stadium,
-					stanopracowaniakolekcji: daneGatunek.stanopracowaniakolekcji,
-					uzytekekologiczny: daneGatunek.uzytekekologiczny,
-					wiek: daneGatunek.wiek,
-					wspolrzedneatpol: daneGatunek.wspolrzedneatpol,
+					szerokoscgeograficzna: daneGatunek.szerokoscgeograficzna,
+					dlugoscgeograficzna: daneGatunek.dlugoscgeograficzna,
 					wspolrzedneutm: daneGatunek.wspolrzedneutm,
-					wymiary: daneGatunek.wymiary,
-					wypozyczony: daneGatunek.wypozyczony,
+					wspolrzedneatpol: daneGatunek.wspolrzedneatpol,
+					georeferencjakomentarze: daneGatunek.georeferencjakomentarze,
+					lokalizacjakomentarze: daneGatunek.lokalizacjakomentarze,
+					obszarchroniony: daneGatunek.obszarchroniony,
+					parknarodowy: daneGatunek.parknarodowy,
+					parkkrajobrazowy: daneGatunek.parkkrajobrazowy,
+					rezerwatprzyrody: daneGatunek.rezerwatprzyrody,
+					rodzajityprezerwatu: daneGatunek.rodzajityprezerwatu,
+					obszarchronionegokrajobrazu: daneGatunek.obszarchronionegokrajobrazu,
+					uzytekekologiczny: daneGatunek.uzytekekologiczny,
 					zespolprzyrodniczokrajobrazowy:
 						daneGatunek.zespolprzyrodniczokrajobrazowy,
-					zrodlo: daneGatunek.zrodlo,
-					kolekcja: daneGatunek.kolekcja,
+					koditypobszarunatura2000: daneGatunek.koditypobszarunatura2000,
+					nazwaobszarunatura2000: daneGatunek.nazwaobszarunatura2000,
+					kontynent: daneGatunek.kontynent,
+					państwo: daneGatunek.panstwo,
+					wojewodztwo: daneGatunek.wojewodztwo,
+					powiat: daneGatunek.powiat,
+					gmina: daneGatunek.gmina,
+					polozeniewpodzialefizjograficznym:
+						daneGatunek.polozeniewpodzialefizjograficznym,
+					polozeniewpodzialebiogeograficznymeuropy:
+						daneGatunek.polozeniewpodzialebiogeograficznymeuropy,
+					polozeniewpodzialegeograficznympotencjalnejroslinnoscinaturalne:
+						daneGatunek.polozeniewpodzialegeograficznympotencjalnejroslinnoscinaturalne,
+					administracjapanstwowaisamorzadowa:
+						daneGatunek.administracjapanstwowaisamorzadowa,
+					sluzbyifunkcjonariuszepanstwowi:
+						daneGatunek.sluzbyifunkcjonariuszepanstwowi,
+					oswiatanauczycielestudenciuczniowie:
+						daneGatunek.oswiatanauczycielestudenciuczniowie,
+					pracownicynaukowidoktoranci: daneGatunek.pracownicynaukowidoktoranci,
+					organizacjepozarzadowespoleczenstwo:
+						daneGatunek.organizacjepozarzadowespoleczenstwo,
+					grupydoceloweopisprzydatnosci:
+						daneGatunek.grupydoceloweopisprzydatnosci,
+					opisuwagi: daneGatunek.opisuwagi,
+					pochodzenieokazu: daneGatunek.pochodzenieokazu,
+					bibliografia: daneGatunek.bibliografia,
+					geodokladnosc: daneGatunek.geodokladnosc,
 					wspolrzedne: daneGatunek.wspolrzedne,
+					kolekcja: daneGatunek.kolekcja,
 				};
 
 				o.push(objektDane);
@@ -242,7 +255,7 @@ JasonToExcel = (x) => {
 	const workBook = xlsx.utils.book_new();
 	const workSheet = xlsx.utils.json_to_sheet(x);
 	xlsx.utils.book_append_sheet(workBook, workSheet);
-	xlsx.writeFile(workBook, "daneToExcel3.xlsx");
+	xlsx.writeFile(workBook, "daneToExcelPOZM.xlsx");
 	console.log("**************Zapisany Plik**************");
 };
 
