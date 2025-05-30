@@ -33,7 +33,11 @@ Search = async (filter, paginacja) => {
 		.post(
 			"https://api.amunatcoll.pl/anc/taxons/search/",
 			{
-				filter: { kolekcjanumerokazu: "POZM" },
+				filter: {
+					kolekcjanumerokazu: "*",
+					not_3: { kolekcjanumerokazu: "POZG" },
+					not_1: { kolekcjanumerokazu: "POZ" },
+				},
 				pagination: { currentPage: 1, perPage: 75000 },
 			},
 			{

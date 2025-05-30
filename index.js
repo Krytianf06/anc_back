@@ -255,7 +255,7 @@ JasonToExcel = (x) => {
 	const workBook = xlsx.utils.book_new();
 	const workSheet = xlsx.utils.json_to_sheet(x);
 	xlsx.utils.book_append_sheet(workBook, workSheet);
-	xlsx.writeFile(workBook, "daneToExcelPOZM.xlsx");
+	xlsx.writeFile(workBook, "daneToExcel_ZOO_1.xlsx");
 	console.log("**************Zapisany Plik**************");
 };
 
