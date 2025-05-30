@@ -53,20 +53,20 @@ app.post("/szukanie", SearchAll);
 // SZUKANIE OGÓLNE
 
 app.post("/ident_gatunek", async (req, res) => {
-	const iDsipww = fs.readFileSync(idsipwwPath, {
-		encoding: "utf8",
-	});
-	let sipww = JSON.parse(iDsipww);
+	// const iDsipww = fs.readFileSync(idsipwwPath, {
+	// 	encoding: "utf8",
+	// });
+	// let sipww = JSON.parse(iDsipww);
 	// console.log(sipww[0].ID);
 	let postep = [];
 
-	// const loadIDrekordu = fs.readFileSync(dataIDrekordu, {
-	// 	encoding: "utf8",
-	// });
-	// let IDrekord = JSON.parse(loadIDrekordu);
+	const loadIDrekordu = fs.readFileSync(dataIDrekordu, {
+		encoding: "utf8",
+	});
+	let IDrekord = JSON.parse(loadIDrekordu);
 
-	for (let i = 0; i < sipww.length; i++) {
-		const elementID = sipww[i].ID;
+	for (let i = 0; i < IDrekord.length; i++) {
+		const elementID = IDrekord[i];
 		console.log(i);
 		console.log(elementID);
 		postep.splice(0, 1, i);
@@ -103,6 +103,75 @@ app.post("/ident_gatunek", async (req, res) => {
 					siedlisko0: daneGatunek.siedlisko0,
 					siedlisko1: daneGatunek.siedlisko1,
 					wojewodztwo: daneGatunek.wojewodztwo,
+					wspolrzedne: daneGatunek.wspolrzedne,
+					autorgatunku: daneGatunek.autorgatunku,
+					autoroznaczenia: daneGatunek.autoroznaczenia,
+					autorzbioru: daneGatunek.autorzbioru,
+					autorzbiorudodatkowyopis: daneGatunek.autorzbiorudodatkowyopis,
+					bibliografia: daneGatunek.bibliografia,
+					botanikazoologia: daneGatunek.botanikazoologia,
+					datainne: daneGatunek.datainne,
+					dataoznaczeniazbioru: daneGatunek.dataoznaczeniazbioru,
+					datazebraniaokazuproby: daneGatunek.datazebraniaokazuproby,
+					datazebraniaprobykoniec: daneGatunek.datazebraniaprobykoniec,
+					gatunek: daneGatunek.gatunek,
+					geodokladnosc: daneGatunek.geodokladnosc,
+					habitat: daneGatunek.habitat,
+					instytucja: daneGatunek.instytucja,
+					jednostkanadrzedna: daneGatunek.jednostkanadrzedna,
+					koditypobszarunatura2000: daneGatunek.koditypobszarunatura2000,
+					kontynent: daneGatunek.kontynent,
+					kwalifikatorhybrydylubchimery:
+						daneGatunek.kwalifikatorhybrydylubchimery,
+					locationsite: daneGatunek.locationsite,
+					materialdowodowy: daneGatunek.materialdowodowy,
+					metodazbioru: daneGatunek.metodazbioru,
+					nazwaobszarunatura2000: daneGatunek.nazwaobszarunatura2000,
+					numerproby: daneGatunek.numerproby,
+					numerzbioruokreslonegoautora:
+						daneGatunek.numerzbioruokreslonegoautora,
+					obszarchronionegokrajobrazu: daneGatunek.obszarchronionegokrajobrazu,
+					obszarchroniony: daneGatunek.obszarchroniony,
+					opakowanienajnizszegorzedu: daneGatunek.opakowanienajnizszegorzedu,
+					opakowaniezbiorcze: daneGatunek.opakowaniezbiorcze,
+					opisuwagi: daneGatunek.opisuwagi,
+					oznaczeniehybrydy: daneGatunek.oznaczeniehybrydy,
+					parkkrajobrazowy: daneGatunek.parkkrajobrazowy,
+					parknarodowy: daneGatunek.parknarodowy,
+					plec: daneGatunek.plec,
+					pochodzenieokazu: daneGatunek.pochodzenieokazu,
+					podloze: daneGatunek.podloze,
+					podrodzaj: daneGatunek.podrodzaj,
+					polkaszafaentomologiczna: daneGatunek.polkaszafaentomologiczna,
+					polozeniewpodzialebiogeograficznymeuropy:
+						daneGatunek.polozeniewpodzialebiogeograficznymeuropy,
+					polozeniewpodzialefizjograficznym:
+						daneGatunek.polozeniewpodzialefizjograficznym,
+					polozeniewpodzialegeograficznympotencjalnejroslinnoscinaturalne:
+						daneGatunek.polozeniewpodzialegeograficznympotencjalnejroslinnoscinaturalne,
+					polozeniewzgledempoziomumorza:
+						daneGatunek.polozeniewzgledempoziomumorza,
+					pomieszczenie: daneGatunek.pomieszczenie,
+					pracownicynaukowidoktoranci: daneGatunek.pracownicynaukowidoktoranci,
+					rangajednostkinadrzednej: daneGatunek.rangajednostkinadrzednej,
+					regalszafa: daneGatunek.regalszafa,
+					rezerwatprzyrody: daneGatunek.rezerwatprzyrody,
+					rodzaj: daneGatunek.rodzaj,
+					rodzajityprezerwatu: daneGatunek.rodzajityprezerwatu,
+					rodzajtypunomenklatorycznego:
+						daneGatunek.rodzajtypunomenklatorycznego,
+					stadium: daneGatunek.stadium,
+					stanopracowaniakolekcji: daneGatunek.stanopracowaniakolekcji,
+					uzytekekologiczny: daneGatunek.uzytekekologiczny,
+					wiek: daneGatunek.wiek,
+					wspolrzedneatpol: daneGatunek.wspolrzedneatpol,
+					wspolrzedneutm: daneGatunek.wspolrzedneutm,
+					wymiary: daneGatunek.wymiary,
+					wypozyczony: daneGatunek.wypozyczony,
+					zespolprzyrodniczokrajobrazowy:
+						daneGatunek.zespolprzyrodniczokrajobrazowy,
+					zrodlo: daneGatunek.zrodlo,
+					kolekcja: daneGatunek.kolekcja,
 					wspolrzedne: daneGatunek.wspolrzedne,
 				};
 

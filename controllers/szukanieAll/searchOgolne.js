@@ -34,7 +34,7 @@ Search = async (filter, paginacja) => {
 			"https://api.amunatcoll.pl/anc/taxons/search/",
 			{
 				filter: { kolekcjanumerokazu: "POZ-V" },
-				pagination: { currentPage: 1, perPage: 5000 },
+				pagination: { currentPage: 1, perPage: 50000 },
 			},
 			{
 				headers: {
