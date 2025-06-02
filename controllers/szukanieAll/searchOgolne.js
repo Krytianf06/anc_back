@@ -38,7 +38,7 @@ Search = async (filter, paginacja) => {
 					not_3: { kolekcjanumerokazu: "POZG" },
 					not_1: { kolekcjanumerokazu: "POZ" },
 				},
-				pagination: { currentPage: 1, perPage: 75000 },
+				pagination: { currentPage: 14, perPage: 30000 },
 			},
 			{
 				headers: {
