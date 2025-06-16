@@ -270,6 +270,25 @@ JasonToExcel = (x) => {
 
 const o = new Object([]);
 
+app.post("test1", (req, res) => {
+	console.log("Klops11111111111111111111111");
+	// try {
+	// 	await axios
+	// 		.get(
+	// 			"https://rhus-103.man.poznan.pl/dlibra/indexsearch?rdfName=CollectionSpecimenNumber&ipp=60&p=0&filter=POZ"
+	// 		)
+	// 		.then(function (response) {
+	// 			newRefreshID = response;
+	// 		})
+	// 		.catch(function (error) {
+	// 			console.log(error);
+	// 		});
+	// 	return newRefreshID;
+	// } catch (error) {
+	// 	console.log(error);
+	// }
+});
+
 app.post("/test", (req, res) => {
 	// console.log(req.body);
 	const { ID, kolekcjanumerokazu, państwo } = req.body;

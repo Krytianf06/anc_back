@@ -35,10 +35,11 @@ Search = async (filter, paginacja) => {
 			{
 				filter: {
 					kolekcjanumerokazu: "*",
-					not_3: { kolekcjanumerokazu: "POZG" },
-					not_1: { kolekcjanumerokazu: "POZ" },
+					multimedia: "true",
+					// not_3: { kolekcjanumerokazu: "POZG" },
+					// not_1: { kolekcjanumerokazu: "POZ" },
 				},
-				pagination: { currentPage: 14, perPage: 30000 },
+				pagination: { currentPage: 3, perPage: 50000 },
 			},
 			{
 				headers: {
