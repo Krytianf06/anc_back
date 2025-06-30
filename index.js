@@ -8,6 +8,8 @@ const jasonObject = require("./test.json");
 const login = require("./controllers/auth/login");
 const { dataPath } = require("./controllers/auth/login");
 const ref = require("./controllers/auth/refresh");
+const Tesseract = require("tesseract.js")
+
 // const { Refresh, RefreshToken } = require("./controllers/auth/refresh");
 
 const {
@@ -270,8 +272,14 @@ JasonToExcel = (x) => {
 
 const o = new Object([]);
 
-app.post("test1", (req, res) => {
-	console.log("Klops11111111111111111111111");
+
+
+const plik = "./tekstOCR.txt";
+
+
+
+app.get("/test1", async (req, res) => {
+	console.log("Klops111111111111111111111");
 	// try {
 	// 	await axios
 	// 		.get(
@@ -287,7 +295,72 @@ app.post("test1", (req, res) => {
 	// } catch (error) {
 	// 	console.log(error);
 	// }
+
+	await Odczyt();
+	console.log("@@@@@@@@@@@@@@@@@@@koniec odczytu @@@@@@@@@@@@@@@@@@")
+
+	res.status(200).end();
+
+
 });
+
+
+ Odczyt = async () =>{
+	 await Tesseract.recognize(
+  './POZG-V-0080674.tif',
+  'pol',
+  {
+    logger: m => console.log(m)
+  }
+	).then(({ data: { text } }) => {
+	console.log('klops@@@@@@@@@@@@@@');
+  console.log(text);
+  tekstOCR(text, plik);
+  console.log('klops@@@@@@@@@@@@@@');
+});}
+
+const tekstOCR = (data, path) => {
+		try {
+			fs.writeFileSync(path, data, {
+				encoding: "utf8",
+			});
+			console.log("zapisany Token Użytkownika");
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
+// fs.writeFileSync(path, JSON.stringify(data), {
+
+
+
+// const fs = require('fs');
+// const { recognize } = require('tesseract.js');
+
+// async function ocrTiff(filePath) {
+//   try {
+//     const imageBuffer = fs.readFileSync(filePath);
+//     const { data: { text } } = await recognize(imageBuffer, 'pol');
+//     console.log('Rozpoznany tekst:', text);
+//   } catch (err) {
+//     console.error('Błąd OCR:', err);
+//   }
+// }
+
+// // Podaj ścieżkę do pliku TIFF
+// const filePath = 'ścieżka/do/plik.tiff';
+
+// ocrTiff(filePath);
+
+
+
+
+
+
+
+
+
+
 
 app.post("/test", (req, res) => {
 	// console.log(req.body);
