@@ -8,7 +8,7 @@ const jasonObject = require("./test.json");
 const login = require("./controllers/auth/login");
 const { dataPath } = require("./controllers/auth/login");
 const ref = require("./controllers/auth/refresh");
-const Tesseract = require("tesseract.js")
+const Tesseract = require("tesseract.js");
 
 // const { Refresh, RefreshToken } = require("./controllers/auth/refresh");
 
@@ -272,11 +272,7 @@ JasonToExcel = (x) => {
 
 const o = new Object([]);
 
-
-
 const plik = "./tekstOCR.txt";
-
-
 
 app.get("/test1", async (req, res) => {
 	console.log("Klops111111111111111111111");
@@ -297,42 +293,34 @@ app.get("/test1", async (req, res) => {
 	// }
 
 	await Odczyt();
-	console.log("@@@@@@@@@@@@@@@@@@@koniec odczytu @@@@@@@@@@@@@@@@@@")
+	console.log("@@@@@@@@@@@@@@@@@@@koniec odczytu @@@@@@@@@@@@@@@@@@");
 
 	res.status(200).end();
-
-
 });
 
-
- Odczyt = async () =>{
-	 await Tesseract.recognize(
-  './POZG-V-0080674.tif',
-  'pol',
-  {
-    logger: m => console.log(m)
-  }
-	).then(({ data: { text } }) => {
-	console.log('klops@@@@@@@@@@@@@@');
-  console.log(text);
-  tekstOCR(text, plik);
-  console.log('klops@@@@@@@@@@@@@@');
-});}
+Odczyt = async () => {
+	await Tesseract.recognize("./plikTest.jpg", "pol", {
+		logger: (m) => console.log(m),
+	}).then(({ data: { text } }) => {
+		console.log("klops@@@@@@@@@@@@@@");
+		console.log(text);
+		tekstOCR(text, plik);
+		console.log("klops@@@@@@@@@@@@@@");
+	});
+};
 
 const tekstOCR = (data, path) => {
-		try {
-			fs.writeFileSync(path, data, {
-				encoding: "utf8",
-			});
-			console.log("zapisany Token Użytkownika");
-		} catch (err) {
-			console.error(err);
-		}
-	};
+	try {
+		fs.writeFileSync(path, data, {
+			encoding: "utf8",
+		});
+		console.log("zapisany!!!!!!!!!!!!");
+	} catch (err) {
+		console.error(err);
+	}
+};
 
 // fs.writeFileSync(path, JSON.stringify(data), {
-
-
 
 // const fs = require('fs');
 // const { recognize } = require('tesseract.js');
@@ -351,16 +339,6 @@ const tekstOCR = (data, path) => {
 // const filePath = 'ścieżka/do/plik.tiff';
 
 // ocrTiff(filePath);
-
-
-
-
-
-
-
-
-
-
 
 app.post("/test", (req, res) => {
 	// console.log(req.body);
